@@ -32,9 +32,6 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.put("/:id", auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
   let characters = req.body.characters ? req.body.characters : [];
   let features = req.body.features ? req.body.features : {};
   const image = await Image.findByIdAndUpdate(
@@ -56,6 +53,45 @@ router.put("/:id", auth, async (req, res) => {
 
   res.send(image);
 });
+
+
+router.put("/filename/:filename", auth, async (req, res) => {
+  const filter = {
+    filename: req.params.filename
+  }
+
+  let updateBody = Object();
+  if (req.body.characters) {
+    updateBody.characters = req.body.characters;
+  }
+  if (req.body.features) {
+    updateBody.features = req.body.features;
+  }
+  if (req.body.subtitle) {
+    updateBody.subtitle = req.body.subtitle;
+  }
+  if (req.body.episode) {
+    updateBody.episode = req.body.episode;
+  }
+  if (req.body.season) {
+    updateBody.season = req.body.season;
+  }
+
+  if (Object.keys(updateBody).length === 0) {
+      return res
+        .status(400)
+        .send("Bad request, body must contain one field update");
+  }
+  const image = await Image.findOneAndUpdate(filter, updateBody);
+
+  if (!image)
+    return res
+      .status(404)
+      .send("The image with the given ID was not found.");
+
+  res.send(image);
+});
+
 
 router.post("/search", auth, async (req, res) => {
     let search = Object();
