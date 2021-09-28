@@ -34,5 +34,17 @@ function validateSubtitle(subtitle) {
     return Joi.validate(subtitle, schema);
 }
 
+function checkInput(subtitle) {
+  const schema = {
+    filename: Joi.string(),
+    subtitle: Joi.string(),
+    episode: Joi.number().min(1).max(25),
+    season: Joi.number().min(1).max(7)
+  };
+
+  return Joi.validate(subtitle, schema);
+}
+
 exports.Subtitle = Subtitle; 
 exports.validate = validateSubtitle;
+exports.check = checkInput;

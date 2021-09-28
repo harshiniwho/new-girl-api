@@ -1,4 +1,4 @@
-const { Subtitle, validate } = require("../models/subtitle");
+const { Subtitle, validate, check } = require("../models/subtitle");
 const auth = require("../middleware/auth");
 const express = require("express");
 const router = express.Router();
@@ -26,6 +26,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.put("/:id", auth, async (req, res) => {
+    const { error } = check(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     const subtitle = await Subtitle.findByIdAndUpdate(
@@ -56,6 +57,9 @@ router.get("/:id", auth, async (req, res) => {
 });
 
 router.post("/search", auth, async (req, res) => {
+    const { error } = check(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     if (!req.body.subtitle) {
         return res
         .status(400)
