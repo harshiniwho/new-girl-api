@@ -16,9 +16,7 @@ const Image = mongoose.model('Image', new mongoose.Schema({
     },
     subtitle: {
       type: String,
-      required: true,
-      minlength: 5,
-      maxlength: 300
+      required: true
     },
     episode: {
       type: Number,
@@ -31,7 +29,7 @@ const Image = mongoose.model('Image', new mongoose.Schema({
       maximum: 7
     },
     timestamp: {
-      type: Date,
+      type: String,
       required: false
     },
     characters: {
@@ -51,7 +49,7 @@ function validateImage(image) {
       subtitle: Joi.string().required(),
       episode: Joi.number().min(1).max(25),
       season: Joi.number().min(1).max(7),
-      timestamp: Joi.date(),
+      timestamp: Joi.string(),
       characters: Joi.array().items(Joi.string()),
       features: Joi.object()
     };
@@ -65,7 +63,7 @@ function checkInput(image) {
       imageLink: Joi.string(),
       subtitle: Joi.string(),
       episode: Joi.number().min(1).max(25),
-      timestamp: Joi.date(),
+      timestamp: Joi.string(),
       season: Joi.number().min(1).max(7),
       characters: Joi.array().items(Joi.string()),
       features: Joi.object()

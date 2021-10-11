@@ -1,4 +1,3 @@
-  
 const { Image, validate, check } = require("../models/image");
 const auth = require("../middleware/auth");
 const axios = require("axios");
@@ -17,16 +16,23 @@ router.post("/", auth, async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   let characters = req.body.characters ? req.body.characters : [];
-  let features = req.body.features ? req.body.features : {};
-  let image = new Image({
+  let newImage = {
     filename: req.body.filename,
     imageLink: req.body.imageLink,
     subtitle: req.body.subtitle,
-    episode: req.body.episode,
     season: req.body.season,
-    characters: characters,
-    features: features
-  });
+    characters: characters
+  };
+  if (req.body.episode) {
+    newImage.episode = req.body.episode;
+  }
+  if (req.body.features) {
+    newImage.features = req.body.features;
+  }
+  if (req.body.timestamp) {
+    newImage.timestamp = req.body.timestamp;
+  }
+  let image = new Image(newImage);
   subtitle = await image.save();
 
   res.send(image);
